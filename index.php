@@ -26,27 +26,27 @@ class database {
 
 class penduduk{
     // Properties
-    public $nik;
-    public $nama;
-    public $kelamin;
-    public $alamat;
-    public $status;
-    public $pekerjaan;
-    public $kewarganegaraan;
-    public $tempatlahir;
-    public $tanggallahir;
-    public $golongandarah;
+  public $nik;
+	public $nama;
+  public $kelamin;
+  public $alamat;
+	public $status;
+  public $pekerjaan;
+	public $kewarganegaraan;
+	public $tempatlahir;
+  public $tanggallahir;
+	public $golongandarah;
 
     //Method setting propertis
     function set_all_data ($nik,$nama,$kelamin,$alamat,$status,$pekerjaan,$kewarganegaraan,$tempatlahir,$tanggallahir,$golongandarah){
-	$this->nik = $nik;
+		$this->nik = $nik;
     $this->nama = $nama;
     $this->kelamin = $kelamin;
     $this->alamat = $alamat;
     $this->status = $status;
     $this->pekerjaan = $pekerjaan;
-	$this->kewarganegaran = $tempatlahir;
-	$this->tempatlahir = $tempatlahir;
+		$this->kewarganegaran = $tempatlahir;
+		$this->tempatlahir = $tempatlahir;
     $this->tanggallahir = $tanggallahir;
     $this->golongandarah = $golongandarah;
 	} 
@@ -62,18 +62,6 @@ class penduduk{
         $data_penduduk = "select * from tbl_penduduk";
         $proses_ambil =mysqli_query($koneksi, $data_penduduk);
         return  $proses_ambil;
-    }
-
-    function ambildata_by_id($koneksi, $id) {
-        $data_id = "SELECT * FROM tbl_penduduk WHERE id_penduduk = '$id'";
-        $proses_data_id = mysqli_query($koneksi, $data_id);
-        return $proses_data_id;
-    }
-    
-    function update_data($koneksi,$id_penduduk,$nik,$nama,$kelamin,$alamat,$status,$pekerjaan,$kewarganegaraan,$tempatlahir,$tanggallahir,$golongandarah) {
-        $updatedata = "UPDATE tbl_penduduk SET nik = '$nik', nama = '$nama', kelamin = '$kelamin', alamat = '$alamat', status = '$status', pekerjaan = '$pekerjaan', kewarganegaraan = '$kewarganegaraan', tempatlahir = '$tempatlahir', tanggallahir = '$tanggallahir', golongandarah = '$golongandarah' WHERE id_penduduk = '$id_penduduk' ";
-        $proses_update = mysqli_query($koneksi, $updatedata);
-        return $proses_update;
     }
 
     function hapus_data ($koneksi, $id){
@@ -94,21 +82,9 @@ class penduduk{
       // Koneksi DB
       $koneksi = $db->conn_mysql();
 
-if (isset($_POST["Edit"])) {
-    $id_penduduk = $_POST["id"];
-
-    $penduduk = new penduduk();
-
-    $data_penduduk = $penduduk->ambildata_by_id($koneksi, $id_penduduk);
-
-    $semua_data = $data_penduduk->fetch_array();
-}
-
-
  // Post Data
  if (isset($_POST['submit']) ){
 
-    $id_penduduk = $_POST['id_penduduk'];
     $nik = $_POST['nik'];
     $nama = $_POST['nama'];
     $kelamin = $_POST['kelamin'];
@@ -122,9 +98,9 @@ if (isset($_POST["Edit"])) {
     
 
     $penduduk_post = new penduduk();
-    $penduduk_post->update_data($koneksi,$id_penduduk, $nik,$nama,$kelamin,$alamat,$status,$pekerjaan,$kewarganegaraan,$tempatlahir,$tanggallahir,$golongandarah);
+    $penduduk_post->tambahpenduduk($koneksi,$nik,$nama,$kelamin,$alamat,$status,$pekerjaan,$kewarganegaraan,$tempatlahir,$tanggallahir,$golongandarah);
+    $data_penduduk_db = $penduduk_post->ambildata_penduduk($koneksi);
 
-    header("Location: data_penduduk.php");
    } 
 
   if (isset($_POST['Hapus'])){
@@ -139,14 +115,13 @@ if (isset($_POST["Edit"])) {
   }
 
 
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edit Data Penduduk | Data Kependudukan</title>
+  <title>Data Kependudukan</title>
 
   <!-- favicon -->
   <link rel="shortcut icon" href="dist/img/DATA-KEPENDUDUKAN-LOGO.png" type="image/x-icon">
@@ -280,8 +255,7 @@ if (isset($_POST["Edit"])) {
                 </a>
               </li>
             </ul>
-          </li>
-          
+          </li> 
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -322,67 +296,66 @@ if (isset($_POST["Edit"])) {
               <div class="card-body">
                 <!-- Date dd/mm/yyyy -->
                 <form action="" method="post">
-                  <input type="hidden" name="id_penduduk" value="<?= $semua_data['id_penduduk']?>">
                   <div class="form-group">
                     <label for="nik">NIK</label>
-                    <input type="number" class="form-control" id="nik" value="<?= $semua_data["nik"];?>" name='nik' placeholder="Enter NIK" required>
+                    <input type="number" class="form-control" id="nik" name='nik' placeholder="Masukkan NIK" required>
                   </div>
                 <div class="form-group">
                   <label for="nama">Nama Penduduk</label>
-                  <input type="text" class="form-control" id="nama" value="<?= $semua_data["nama"];?>" name="nama" placeholder="Enter Nama" required>
+                  <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama" required>
                 </div>
 
                 <div class="form-group">
                   <label>Jenis Kelamin</label>
                   <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name='kelamin'>
-                  <option value="Laki-laki" <?php if ($semua_data["kelamin" ] == "Laki-laki") {?> selected="selected"} <?php }?>>Laki-Laki</option>
-                  <option value="Perempuan" <?php if ($semua_data["kelamin" ] == "Perempuan") {?> selected="selected"} <?php }?>>Perempuan</option>
+                    <option selected="selected" value="Laki-laki">Laki-Laki</option>
+                    <option value="Perempuan">Perempuan</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label for="alamat">Alamat</label>
-                  <input type="text" class="form-control" id="alamat" value="<?= $semua_data["alamat"];?>" name='alamat' placeholder="Enter Alamat" required>
+                  <input type="text" class="form-control" id="alamat" name='alamat' placeholder="Masukkan alamat" required>
                 </div>
 
                 <div class="form-group">
                   <label>Status Perkawinan</label>
                   <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name='status'>
-                  <option value="Sudah Menikah" <?php if ($semua_data["status" ] == "Sudah Menikah") {?> selected="select"} <?php }?>>Sudah Menikah</option>
-                  <option value="Belum Menikah" <?php if ($semua_data["status" ] == "Belum Menikah") {?> selected="select"} <?php }?>>Belum Menikah</option>
+                    <option selected="selected" value="Sudah Menikah">Sudah Menikah</option>
+                    <option value="Belum Menikah">Belum Menikah</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label for="nama">Pekerjaan</label>
-                  <input type="text" class="form-control" id="nama" value="<?= $semua_data["pekerjaan"];?>" name="pekerjaan" placeholder="Enter Nama" required>
+                  <input type="text" class="form-control" id="nama" name="pekerjaan" placeholder="Masukkan pekerjaan" required>
                 </div>
 
                 <div class="form-group">
                   <label>Kewarganegaraan</label>
                   <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name='kewarganegaraan'>
-                  <option value="WNI" <?php if ($semua_data["kewarganegaraan" ] == "WNI") {?> selected="select"} <?php }?>>WNI</option>
-                  <option value="WNA" <?php if ($semua_data["kewarganegaraan" ] == "WNA") {?> selected="select"} <?php }?>>WNA</option>
+                    <option selected="selected" value="WNI">WNI</option>
+                    <option value="WNA">WNA</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label for="nama">Tempat Lahir</label>
-                  <input type="text" class="form-control" id="nama" value="<?= $semua_data["tempatlahir"];?>" name="tempatlahir" placeholder="Enter Nama" required>
+                  <input type="text" class="form-control" id="nama" name="tempatlahir" placeholder="Masukkan tempat lahir" required>
                 </div>
 
                 <div class="form-group">
                   <label for="nama">Tanggal Lahir</label>
-                  <input type="date" class="form-control" id="nama" value="<?= $semua_data["tanggallahir"];?>" name="tanggallahir" placeholder="Enter Nama" required>
+                  <input type="date" class="form-control" id="nama" name="tanggallahir" placeholder="Masukkan tanggal lahir" required>
                 </div>
                 
                 <div class="form-group">
                   <label>Golongan Darah</label>
                   <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name='golongandarah'>
-                  <option value="A" <?php if ($semua_data["golongandarah" ] == "A") {?> selected="select"} <?php }?>>A</option>
-                  <option value="B" <?php if ($semua_data["golongandarah" ] == "B") {?> selected="select"} <?php }?>>B</option>
-                  <option value="AB" <?php if ($semua_data["golongandarah" ] == "AB") {?> selected="select"} <?php }?>>AB</option>
-                  <option value="O" <?php if ($semua_data["golongandarah" ] == "O") {?> selected="select"} <?php }?>>O</option>
+                    <option selected="selected" value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="AB">AB</option>
+                    <option value="O">O</option>
                   </select>
                 </div>
 
@@ -390,7 +363,58 @@ if (isset($_POST["Edit"])) {
                 </form>
               </div>
             </div>
-              <!-- /.card-header -->     
+            <!-- /Input Data --> 
+<?php  if (isset($_POST['submit']) or isset($_POST['Hapus'])){ ?>
+            <!-- Tabel Data -->
+            
+              <div class="card-header">
+                <h3 class="card-title">Data Table Penduduk</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>NIK</th>
+                    <th>Nama</th>
+                    <th>Alamat</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Status</th>
+                    <th>Pekerjaan</th>
+                    <th>Kewarganegaraan</th>
+                    <th>Tempat Lahir</th>
+                    <th>Tanggal lahir</th>
+                    <th>Golongan Darah</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <?php while($semua_data_ok = $data_penduduk_db->fetch_array()){ ?>
+                  <tr>
+                    <td> <?php echo $semua_data_ok['nik'];?></td>
+                    <td><?=$semua_data_ok['nama'];?> </td>
+                    <td><?=$semua_data_ok['alamat'];?></td>
+                    <td><?=$semua_data_ok['kelamin'];?></td>
+                    <td><?=$semua_data_ok['status'];?></td>
+                    <td><?=$semua_data_ok['pekerjaan'];?></td>
+                    <td><?=$semua_data_ok['kewarganegaraan'];?></td>
+                    <td><?=$semua_data_ok['tempatlahir'];?></td>
+                    <td><?=$semua_data_ok['tanggallahir'];?></td>
+                    <td><?=$semua_data_ok['golongandarah'];?></td>
+                    <td>
+                      <form action="" method="post">
+                        <input type="hidden" class="form-control" id="id" name='id' value='<?=$semua_data_ok['id_penduduk'];?>'>
+                        <input name='Hapus' value='Hapus' type="submit">
+                      </form>
+                      <form action="edit.php" method="post">
+                        <input type="hidden" class="form-control" id="id" name='id' value='<?=$semua_data_ok['id_penduduk'];?>'>
+                        <input name='Edit' value='Edit' type="submit">
+                      </form>
+                    </td> 
+                  </tr>
+                  <?php } ?>             
+                  </tfoot>
+                </table>
+      <?php } ?>       
               <!-- /.card-body -->
             </div>
             <!-- /Tabel Data -->

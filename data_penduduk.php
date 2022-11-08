@@ -137,6 +137,12 @@ if (isset($_POST['Hapus'])){
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="index.php" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="data_penduduk.php" class="nav-link">Data Penduduk</a>
+        </li>
       </ul>
     </nav>
     <!-- /.navbar -->
@@ -181,15 +187,28 @@ if (isset($_POST['Hapus'])){
                with font-awesome or any other icon font library -->
             <li class="nav-item">
             <li class="nav-item menu-open">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Dashboard
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="../forms/general.html" class="nav-link active">
+                  <a href="index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Home</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="data_penduduk.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Data Penduduk</p>
                   </a>
                 </li>
               </ul>
-            </li>
+            </li> 
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
